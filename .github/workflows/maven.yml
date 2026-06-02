@@ -10,16 +10,17 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main" ] # main 브랜치에서 Push 트리거
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main" ] # main 브랜치에서 Pull Request가 생성되면 트리거
 
+# Github의 데이터 가져와서 Build 진행 => Iaas+Paas => OS가 필요
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # Gihub Actions에서 실행할 운영체제
 
-    steps:
+    steps: # 단계별로 실행되는 workflow
     - uses: actions/checkout@v4
     - name: Set up JDK 17
       uses: actions/setup-java@v4
@@ -27,9 +28,23 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
+    
+#    - name: Build with Maven
+#      run: |
+#        mvn clean package \
+#        -DskipTests \
+#        -f ./deploy003_SpringMVC/pom.xml
 
-    # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
-    - name: Update dependency graph
-      uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
+    - name : Deploy to Tomcat Server
+      evn:
+        TOMCAT_USERNAME: ${{ secrets.TOMCAT_USERNAME }} #git secret의 TOMCAT 사용자명 run에서 사용
+        TOMCAT_PASSWORD: ${{ secrets.TOMCAT_PASSWORD }} #git secret의 TOMCAT 비밀번호 run에서 사용
+        TOMCAT_URL: 'https://ecology-rendering-scuttle.ngrok-free.dev/manager/text'
+      
+      run: |
+        mvn tomcat:redeploy \
+        -Dmaven.tomcat.url=$TOMCAT_URL \
+        -Dmaven.tomcat.username=$TOMCAT_USERNAME \
+        -Dmaven.tomcat.password=$TOMCAT_PASSWORD \
+        -DskipTests \
+        -f ./pom.xml
