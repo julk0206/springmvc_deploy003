@@ -22,10 +22,10 @@ jobs:
 
     steps: # 단계별로 실행되는 workflow
     - uses: actions/checkout@v4
-    - name: Set up JDK 17
+    - name: Set up JDK 21
       uses: actions/setup-java@v4
       with:
-        java-version: '17'
+        java-version: '21'
         distribution: 'temurin'
         cache: maven
     
@@ -43,8 +43,8 @@ jobs:
       
       run: |
         mvn tomcat:redeploy \
-        -Dmaven.tomcat.url=$TOMCAT_URL \
-        -Dmaven.tomcat.username=$TOMCAT_USERNAME \
-        -Dmaven.tomcat.password=$TOMCAT_PASSWORD \
-        -DskipTests \
-        -f ./pom.xml
+          -Dmaven.tomcat.url=$TOMCAT_URL \
+          -Dmaven.tomcat.username=$TOMCAT_USERNAME \
+          -Dmaven.tomcat.password=$TOMCAT_PASSWORD \
+          -DskipTests \
+          -f ./pom.xml
