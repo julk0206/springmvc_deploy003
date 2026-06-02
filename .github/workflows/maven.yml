@@ -36,7 +36,7 @@ jobs:
 #        -f ./deploy003_SpringMVC/pom.xml
 
     - name : Deploy to Tomcat Server
-      evn:
+      env:
         TOMCAT_USERNAME: ${{ secrets.TOMCAT_USERNAME }} #git secret의 TOMCAT 사용자명 run에서 사용
         TOMCAT_PASSWORD: ${{ secrets.TOMCAT_PASSWORD }} #git secret의 TOMCAT 비밀번호 run에서 사용
         TOMCAT_URL: 'https://ecology-rendering-scuttle.ngrok-free.dev/manager/text'
